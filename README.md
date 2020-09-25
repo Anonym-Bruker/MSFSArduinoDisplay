@@ -16,6 +16,7 @@ The LEDS are displaying status for each gear
   - LED off if gear is up
   - LED on if gear is down
   - Flashing LED if moving/in transition
+
 The 16x2-display is showing:
   - The COM1 frequency and STDBY frequency with three decimals 
   - The heading as an integer
