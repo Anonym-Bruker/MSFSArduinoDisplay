@@ -23,11 +23,11 @@ The 16x2-display is showing:
 
 This is a project based on the following libraries:
 
-https://mouseviator.com/fsuipc-java-sdk/
+  https://mouseviator.com/fsuipc-java-sdk/
 
-https://github.com/mschoeffler/arduino-java-serial-communication
+  https://github.com/mschoeffler/arduino-java-serial-communication
 
 
 A picture of the ugly-looking prototype:
 
-https://github.com/Anonym-Bruker/MSFSArduinoDisplay/blob/master/20200925-MSFS2020-Panel.jpg
+  https://github.com/Anonym-Bruker/MSFSArduinoDisplay/blob/master/20200925-MSFS2020-Panel.jpg
