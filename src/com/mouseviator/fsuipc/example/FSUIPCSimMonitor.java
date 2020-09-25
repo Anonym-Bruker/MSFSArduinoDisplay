@@ -27,6 +27,7 @@ import com.mouseviator.fsuipc.datarequest.primitives.DoubleRequest;
 import com.mouseviator.fsuipc.datarequest.primitives.FloatRequest;
 import com.mouseviator.fsuipc.datarequest.primitives.IntRequest;
 import com.mouseviator.fsuipc.datarequest.primitives.ShortRequest;
+import com.mouseviator.fsuipc.datarequest.primitives.LongRequest;
 import com.mouseviator.fsuipc.helpers.aircraft.AircraftHelper;
 import com.mouseviator.fsuipc.helpers.aircraft.Engine1Helper;
 import com.mouseviator.fsuipc.helpers.aircraft.Engine2Helper;
@@ -133,9 +134,8 @@ public class FSUIPCSimMonitor extends javax.swing.JFrame {
     private IntRequest gearPositionLeft;
     private IntRequest gearPositionRight;
     
-    //private ShortRequest com1FrequencyShort;
-    //private ShortRequest com1StandbyShort;
-
+    private IntRequest com1FrequencyInt;
+    private IntRequest com1StandbyInt;
     
     private IDataRequest<Float> simFrameRate;
     private ShortRequest slewMode;
@@ -428,8 +428,12 @@ public class FSUIPCSimMonitor extends javax.swing.JFrame {
                 eng2OilPressure = (FloatRequest) fsuipc.addContinualRequest(engine2Helper.getOilPressure());
                 eng2FuelFlow = (DoubleRequest) fsuipc.addContinualRequest(engine2Helper.getFuelFlow());
             
+                //Only support 2 decimals
                 com1Frequency = (FloatRequest) fsuipc.addContinualRequest(com1Helper.getFrequency());
                 com1Standby = (FloatRequest) fsuipc.addContinualRequest(com1Helper.getStandByFrequency());
+                //Support all decimals
+                com1FrequencyInt = (IntRequest) fsuipc.addContinualRequest(new IntRequest(0x05C4));
+                com1StandbyInt = (IntRequest) fsuipc.addContinualRequest(new IntRequest(0x05CC));
                 
                 gearPositionRight = (IntRequest) fsuipc.addContinualRequest(gearHelper.getRightPosition());
                 gearPositionLeft = (IntRequest) fsuipc.addContinualRequest(gearHelper.getLefttPosition());
@@ -439,10 +443,6 @@ public class FSUIPCSimMonitor extends javax.swing.JFrame {
                 //slew mode indicator request
                 slewMode = (ShortRequest) fsuipc.addContinualRequest(new ShortRequest(0x05DC));
                 
-                //com1Frequency = (FloatRequest) fsuipc.addContinualRequest(new FloatRequest(0x05C4));
-                //com1Standby = (FloatRequest) fsuipc.addContinualRequest(new FloatRequest(0x05CC));
-                //com1Frequency = (FloatRequest) fsuipc.addContinualRequest(new FloatRequest(0x034E));
-                //com1Standby = (FloatRequest) fsuipc.addContinualRequest(new FloatRequest(0x311A));
                 
                 //start continual request processing at the rate of 250ms
                 fsuipc.processRequests(250, true);
@@ -504,16 +504,12 @@ public class FSUIPCSimMonitor extends javax.swing.JFrame {
                             //set the labels from values
                             //lblHeading.setText(String.format("%d Mag (%d TRUE)", (int) Math.round(aircraftHeading.getValue() - aircraftMagVar.getValue()), (int) Math.round(aircraftHeading.getValue())));
                             DecimalFormat df = new DecimalFormat("0.000");
-                            //String com1FrequencyString = decimalFormat3.format(com1Frequency.getValue());
-                            //String com1StandbyString = decimalFormat3.format(com1Standby.getValue());
-                            String com1FrequencyString = df.format(com1Frequency.getValue());
-                            String com1StandbyString = df.format(com1Standby.getValue());
-                            //String com1FrequencyString = com1Frequency.getValue().toString();
-                            //String com1StandbyString = com1Standby.getValue().toString();
+                            float COM1frequency = com1FrequencyInt.getValue()/1000;
+                            float STDBY1frequency = com1StandbyInt.getValue()/1000;
+                            String com1FrequencyString = df.format(COM1frequency/1000);
+                            String com1StandbyString = df.format(STDBY1frequency/1000);
                            
-                            //logger.fine("COM1: " + Short.toString(com1FrequencyShort.getValue()) + ", " + Short.toString(com1StandbyShort.getValue()));
-                            //com1FrequencyString = adjustSize(com1FrequencyString, 7);
-                            //com1StandbyString = adjustSize(com1StandbyString, 7);
+                            //logger.fine("COM1: " + Integer.toString(com1FrequencyInt.getValue()) + ", " + Integer.toString(com1StandbyInt.getValue()));
                             
                             int gearPosN = gearPositionNose.getValue().intValue();
                             int gearPosR = gearPositionRight.getValue().intValue();
@@ -570,6 +566,12 @@ public class FSUIPCSimMonitor extends javax.swing.JFrame {
         }
     }
 
+    private byte bcdToDec(byte val)
+    {
+        //return( (val/16*10) + (val%16) );
+        return 0;
+    }
+    
     private void setTitle(boolean connected) {
         String title = "FSUIPC Aircraft Monitor";
         
