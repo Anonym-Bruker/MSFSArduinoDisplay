@@ -31,3 +31,7 @@ This is a project based on the following libraries:
 A picture of the ugly-looking prototype:
 
   https://github.com/Anonym-Bruker/MSFSArduinoDisplay/blob/master/20200925-MSFS2020-Panel.jpg
+  
+  The corresponding Arduino code is checked in here:
+  
+  https://github.com/Anonym-Bruker/MSFS2020ArduinoCode/blob/master/HelloWorld_med_Knapp/HelloWorld_med_Knapp.ino
