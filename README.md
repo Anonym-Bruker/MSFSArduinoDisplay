@@ -22,6 +22,7 @@ The 16x2-display is showing:
   - The heading as an integer
 
 This is a project based on the following libraries:
+
 https://mouseviator.com/fsuipc-java-sdk/
 https://github.com/mschoeffler/arduino-java-serial-communication
 
